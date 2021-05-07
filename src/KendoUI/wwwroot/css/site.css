@@ -1,4 +1,4 @@
-﻿html {
+html {
     position: relative;
     min-height: 100%;
 }
@@ -112,4 +112,135 @@ p .k-button {
     .k-menu .k-link {
         box-sizing: border-box;
     }
+}
+
+.category {
+  margin: 10px
+}
+
+.list {
+  margin: 5px
+}
+
+.item {
+  margin: 1px
+}
+
+ul {
+  list-style-type: none;
+}
+
+/* Create four equal columns that floats next to each other */
+.column {
+  float: left;
+  width: 25%;
+}
+
+/* Clear floats */
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+.product-view {
+  float: left;
+  width: 50%;
+  height: 300px;
+  box-sizing: border-box;
+  border-top: 0;
+  position: relative;
+}
+
+  .product-view:nth-child(even) {
+    border-left-width: 0;
+  }
+
+  .product-view dl {
+    margin: 10px 10px 0;
+    padding: 0;
+    overflow: hidden;
+  }
+
+  .product-view dt, dd {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    line-height: 24px;
+    font-size: 18px;
+  }
+
+  .product-view dt {
+    font-size: 11px;
+    height: 16px;
+    line-height: 16px;
+    text-transform: uppercase;
+    opacity: 0.5;
+  }
+
+  .product-view dd {
+    height: 46px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
+    .product-view dd .k-widget,
+    .product-view dd .k-textbox {
+      font-size: 14px;
+    }
+
+#example .k-listview {
+  border-width: 1px 0 0;
+  padding: 0;
+  overflow: hidden;
+  min-height: 298px;
+}
+
+.edit-buttons {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  text-align: right;
+  padding: 5px;
+  background-color: rgba(0,0,0,0.1);
+}
+
+.k-pager-wrap {
+  border-top: 0;
+}
+
+span.k-invalid-msg {
+  position: absolute;
+  margin-left: 6px;
+}
+
+.k-add-button {
+  margin-bottom: 2em;
+}
+
+@media only screen and (max-width : 620px) {
+
+  .product-view {
+    width: 100%;
+  }
+
+    .product-view:nth-child(even) {
+      border-left-width: 1px;
+    }
+}
+
+/* Responsive layout - makes a two column-layout instead of four columns */
+@media screen and (max-width: 900px) {
+  .column {
+    width: 50%;
+  }
+}
+
+/* Responsive layout - makes the two columns stack on top of each other instead of next to each other */
+@media screen and (max-width: 600px) {
+  .column {
+    width: 100%;
+  }
 }

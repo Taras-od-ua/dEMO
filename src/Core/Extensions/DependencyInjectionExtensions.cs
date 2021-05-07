@@ -11,7 +11,7 @@ namespace Core.Extensions
         public static IServiceCollection AddCoreComponents(this IServiceCollection services)
         {
             services.AddTransient<IEmployeeRepository, EmployeeRepository>();
-            services.AddScoped<ICarService, CarService>();
+            services.AddScoped<ICategoriesService, CategoriesService>();
             // configure DI for application services
             services.AddScoped<IUserService, UserService>();
 

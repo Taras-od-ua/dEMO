@@ -36,8 +36,15 @@ namespace HappyCode.NetCoreBoilerplate.Api
         {
             services
                 .AddHttpContextAccessor()
-                .AddRouting(options => options.LowercaseUrls = true)
-                .AddMvcCore(options =>
+                .AddRouting(options => options.LowercaseUrls = true);
+
+            services.AddCors(c =>
+                {
+                    c.AddPolicy("AllowOrigin", options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader().SetIsOriginAllowed(origin => true) // allow any origin
+                        );
+                });
+
+            services.AddMvcCore(options =>
                 {
                     options.Filters.Add<HttpGlobalExceptionFilter>();
                     options.Filters.Add<ValidateModelStateFilter>();
@@ -50,7 +57,7 @@ namespace HappyCode.NetCoreBoilerplate.Api
             services.Configure<AppSettings>(_configuration.GetSection("AppSettings"));
 
             services.AddDbContext<EmployeesContext>(options => options.UseMySql(_configuration.GetConnectionString("MySqlDb")), contextLifetime: ServiceLifetime.Transient, optionsLifetime: ServiceLifetime.Singleton);
-            services.AddDbContextPool<CarsContext>(options => options.UseSqlServer(_configuration.GetConnectionString("MsSqlDb")), poolSize: 10);
+            services.AddDbContextPool<CategoriesContext>(options => options.UseSqlServer(_configuration.GetConnectionString("MsSqlDb")), poolSize: 10);
 
             services.AddSwagger(_configuration);
 
@@ -60,9 +67,9 @@ namespace HappyCode.NetCoreBoilerplate.Api
             services.AddFeatureManagement()
                 .AddFeatureFilter<TimeWindowFilter>();
 
-            services.AddHealthChecks()
-                
-                .AddSqlServer(_configuration.GetConnectionString("MsSqlDb"));
+            services.AddHealthChecks().AddSqlServer(_configuration.GetConnectionString("MsSqlDb"));
+
+           
         }
 
         public virtual void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -71,6 +78,9 @@ namespace HappyCode.NetCoreBoilerplate.Api
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseCors(options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader().SetIsOriginAllowed(origin => true) // allow any origin
+                );
 
             app.UseRouting();
             app.UseEndpoints(endpoints =>
@@ -84,7 +94,7 @@ namespace HappyCode.NetCoreBoilerplate.Api
 
             // custom jwt auth middleware
             app.UseMiddleware<JwtMiddleware>();
-
+            
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {

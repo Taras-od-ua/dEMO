@@ -35,7 +35,7 @@ namespace Core.Repositories
                 .AsNoTracking()
                 .ToListAsync(cancellationToken);
 
-            return employees.Select(Core.Extensions.EmployeeExtensions.MapToDto).ToList();
+            return employees.Select(Core.Extensions.Extensions.MapToDto).ToList();
         }
 
         public async Task<EmployeeDto> GetByIdAsync(int id, CancellationToken cancellationToken)

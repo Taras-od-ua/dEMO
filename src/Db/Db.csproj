@@ -8,7 +8,7 @@
     <Content Include="appsettings.json" CopyToOutputDirectory="Always" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Scripts\Sql\S001_AddCarTypesTable.sql" />
+    <EmbeddedResource Include="Scripts\Sql\S001_AddCategoriesTable.sql" />
   </ItemGroup>
 
   <ItemGroup>

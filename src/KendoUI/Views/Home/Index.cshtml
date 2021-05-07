@@ -1,31 +1,62 @@
 @{
     ViewData["Title"] = "Home Page";
 }
-<script src="~/js/home.js"></script>
+<script src="~/js/dashboard.js"></script>
 
 <div class=" mb-2" >
-  <div ng-controller="todoList">
-    <span>{{remaining()}} of {{todos.length}} remaining</span>
-    [ <a href="" ng-click="archive()">archive</a> ]
-    <ul class="unstyled">
+  <div ng-controller="dashboardController">
 
-      <li ng-repeat="todo in todos">
-        <label class="checkbox">
-          <input type="checkbox" ng-model="todo.done">
-          <span class="done-{{todo.done}}">{{todo.text}}</span>
-        </label>
-      </li>
-    </ul>
-
-    <form ng-submit="addTodo()">
-      <input type="text" ng-model="todoText"  size="30"
-             placeholder="add new todo here">
-      <input class="btn-primary" type="submit" value="add">
-    </form>
+    <div id="listView"></div>
 
 
-    <input kendo-datepicker="datePicker" k-on-change="onChange()">
 
+
+
+
+
+    <div id="dashboard" class="row">
+      <div class="column  border border-primary category" ng-repeat="cat in categories">
+        <h2 class="text-center">{{cat.name}}</h2>
+
+        <div kendo-sortable kendo-list-view data-k-options="listOptions(cat.todos)" id="list{{cat.id}}">
+        </div>
+      </div>
+    </div>
 
   </div>
+</div>
+
+<script type="text/x-kendo-template" id="template">
+  <div class="product">
+  <div>
+      <h2 class="text-center">{{dataItem.name}}</h2>
+      <ul>
+        <li ng-repeat="list in dataItem.list">
+          <label class="checkbox">
+            <input type="checkbox" ng-model="list.done">
+            <span class="done-{{list.done}}">{{list.text}}</span>
+          </label>
+        </li>
+     </ul>
   </div>
+  </div>
+</script>
+
+<script type="text/ng-template" id="todo.html">
+
+  <div class="k-widget"  >
+   <div>
+      <h2 class="text-center">{{dataItem.name}}</h2>
+      <ul>
+        <li ng-repeat="list in dataItem.list">
+          <label class="checkbox">
+            <input type="checkbox" ng-model="list.done">
+            <span class="done-{{list.done}}">{{list.text}}</span>
+          </label>
+        </li>
+     </ul>
+  </div>
+</div>
+
+
+</script>

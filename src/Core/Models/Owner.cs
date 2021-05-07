@@ -22,7 +22,7 @@ namespace  Core.Models
         public string FullName { get; set; }
 
 
-        [InverseProperty("Owner")]
-        public virtual ICollection<Car> Cars { get; set; } = new HashSet<Car>();
+       /* [InverseProperty("Owner")]
+        public virtual ICollection<Category> Categories { get; set; } = new HashSet<Category>();*/
     }
 }

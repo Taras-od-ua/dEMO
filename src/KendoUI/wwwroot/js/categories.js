@@ -1,71 +1,127 @@
+(function (angular) {
+  "use strict";
 
-angular.module("todoApp", ["kendo.directives"]).controller("categories", function ($scope) {
 
-  var crudServiceBaseUrl = "https://demos.telerik.com/kendo-ui/service";
+  angular.module("todoApp", ["kendo.directives"]).controller("categories", function ($rootScope, $scope, $q, $http, $templateCache) {
 
-  $scope.treelistOptions = {
-    dataSource: {
-      transport: {
-        read: {
-          url: crudServiceBaseUrl + "/EmployeeDirectory/All",
-          dataType: "jsonp"
+  var baseUrl = "http://localhost:5000/api/";
+
+  function get(url, params) {
+    var defer = $q.defer();
+    $rootScope.$broadcast('beginRequest');
+    $http({
+        method: "GET",
+      url: url,
+       
+        params: params
+      })
+      .then(
+        function (res) {
+          $rootScope.$broadcast('endRequest');
+          defer.resolve(res.data);
         },
-        update: {
-          url: crudServiceBaseUrl + "/EmployeeDirectory/Update",
-          dataType: "jsonp"
-        },
-        destroy: {
-          url: crudServiceBaseUrl + "/EmployeeDirectory/Destroy",
-          dataType: "jsonp"
-        },
-        create: {
-          url: crudServiceBaseUrl + "/EmployeeDirectory/Create",
-          dataType: "jsonp"
-        },
-        parameterMap: function (options, operation) {
-          if (operation !== "read" && options.models) {
-            return { models: kendo.stringify(options.models) };
-          }
+        function (err) {
+          $rootScope.$broadcast('endRequest');
+          defer.reject(err);
         }
+      )
+      .finally(function () {
+        /* Just by adding a finally clause on $http, the finally
+            handler in the chain i.e. in the controller utilizing
+            the restService, does get called.*/
+      });
+
+    return defer.promise;
+  }
+
+  $scope.addCategory = function(e) {
+
+    $scope.listView.add();
+
+    e.preventDefault();
+    };
+
+  function getCategories() {
+    return get(baseUrl+"categories");
+  }
+    
+  $scope.listOptions = {
+    dataSource: new kendo.data.DataSource({
+      transport: {
+          read: function(options) {
+            getCategories().then(function(res) {
+              options.success(res);
+
+            });
+        },
+        update: function (options) {
+          var model = $.extend({}, options.data.models[0]);
+          model.color = '#'+kendo.parseColor(model.color).toHex();
+            $.ajax({
+              url: baseUrl + "categories/" + model.id,
+              type: 'PUT',
+              data: JSON.stringify(model),
+              dataType: 'json',
+              contentType: 'application/json',
+              success: function(result) {
+                options.success(result);
+              }
+            })
+        },
+
+        destroy: function (options) {
+          var model = $.extend({}, options.data.models[0]);
+            $.ajax({
+              url: baseUrl + "categories/" + model.id,
+              type: 'DELETE',
+              success: function (result) {
+                options.success(result);
+              }
+            })
+          },
+
+        create: function (options) {
+          var model = $.extend({}, options.data.models[0]);
+          model.id = 0;
+          model.color ='#'+ kendo.parseColor(model.color).toHex();
+            $.ajax({
+              url: baseUrl + "categories",
+              type: 'POST',
+              data: JSON.stringify(model),
+              dataType: 'json',
+              contentType: 'application/json',
+              success: function(result) {
+                options.success(result);
+              }
+            });
+          },
+          parameterMap: function (options, operation) {
+            if (operation !== "read" && options.models) {
+              return { models: kendo.stringify(options.models) };
+            }
+          }
       },
+      batch: true,
+      
       schema: {
         model: {
-          id: "EmployeeId",
-          parentId: "ReportsTo",
+          id: "id",
           fields: {
-            EmployeeId: { type: "number", editable: false, nullable: false },
-            ReportsTo: { nullable: true, type: "number" },
-            FirstName: { validation: { required: true } },
-            LastName: { validation: { required: true } },
-            HireDate: { type: "date" },
-            Phone: { type: "string" },
-            HireDate: { type: "date" },
-            BirthDate: { type: "date" },
-            Extension: { type: "number", validation: { min: 0, required: true } },
-            Position: { type: "string" }
+            id: { editable: false, nullable: false },
+            title: { editable: true, nullable: false },
+            color: { editable: true, nullable: false },
+           
           }
         }
       }
-    },
-    sortable: true,
-    editable: true,
-    toolbar: ["create", "save", "cancel"],
-    
-    columns: [
-      { field: "Name", title: "Name", width: "150px" },
-      { field: "Priority", title: "Priority", width: "150px" },
-      { field: "Position" },
-     /* {
-        title: "Location",
-        template: "{{ dataItem.City }}, {{ dataItem.Country }}"
-      },*/
-      { command: ["edit","destroy"] }
-    ]
+    }),
+    template: kendo.template($("#template").html()),
+    editTemplate: kendo.template($("#editTemplate").html())
   };
 
 });
 
-
+})(angular);
 
 
 

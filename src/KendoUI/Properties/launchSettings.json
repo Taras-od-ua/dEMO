@@ -3,11 +3,11 @@
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
     "iis": {
-      "applicationUrl": "http://localhost/KendoUI",
+      "applicationUrl": "http://localhost/Demo",
       "sslPort": 0
     },
     "iisExpress": {
-      "applicationUrl": "http://localhost:60403/",
+      "applicationUrl": " http://localhost:5010",
       "sslPort": 0
     }
   },
@@ -19,11 +19,11 @@
       }
     },
     "KendoUI": {
-      "commandName": "Project",
+      "commandName": "IISExpress",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
-      "applicationUrl": "http://localhost:5010"
+      "applicationUrl": "http://localhost:5000/Demo"
     }
   }
 }

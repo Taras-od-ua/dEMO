@@ -1,0 +1,21 @@
+@{
+  ViewData["Title"] = "Categories";
+}
+<script src="~/js/categories.js"></script>
+
+<section class="jumbotron text-center" >
+  <div class="container">
+    <h1 class="jumbotron-heading">@ViewBag.Title.</h1>
+    <p class="lead-text text-muted">@ViewBag.Message</p>
+  </div>
+  
+</section>
+<div >
+  <div class=" mb-2" ng-controller="categories">
+    <div>
+      greed
+      <kendo-tree-list k-options="treelistOptions"></kendo-tree-list>
+    </div>
+  </div>
+</div>
+  

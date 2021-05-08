@@ -1,0 +1,37 @@
+
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+IF object_id(N'dbo.Items', N'U') IS NULL
+BEGIN
+
+CREATE TABLE [dbo].Items(
+	[Id] [bigint] IDENTITY(1,1) NOT NULL,
+	[Title] [nvarchar](50) NOT NULL,
+  ListId [bigint] NOT NULL,
+  [is_deleted] [bit] NOT NULL,
+	[created_at] [datetime] NOT NULL,
+	[updated_at] [datetime] NULL,
+	
+ CONSTRAINT [PK_Items] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+
+
+ALTER TABLE [dbo].Items  WITH CHECK ADD  CONSTRAINT [FK_items_list] FOREIGN KEY(ListId)
+	REFERENCES [dbo].Lists ([Id])
+
+CREATE NONCLUSTERED INDEX IX_is_deleted ON dbo.Items
+		(
+		Id, [is_deleted]
+		) WITH( STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+
+END
+GO
+

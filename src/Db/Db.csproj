@@ -3,11 +3,17 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
+  <ItemGroup>
+    <None Remove="Scripts\Sql\S002_AddListsTable.sql" />
+    <None Remove="Scripts\Sql\S003_AddItemsTable.sql" />
+  </ItemGroup>
   
   <ItemGroup>
     <Content Include="appsettings.json" CopyToOutputDirectory="Always" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Scripts\Sql\S003_AddItemsTable.sql" />
+    <EmbeddedResource Include="Scripts\Sql\S002_AddListsTable.sql" />
     <EmbeddedResource Include="Scripts\Sql\S001_AddCategoriesTable.sql" />
   </ItemGroup>
 

@@ -4,49 +4,54 @@
 <script src="~/js/dashboard.js"></script>
 
 <div class=" mb-2" >
-  <div ng-controller="dashboardController">
+  <div id="contentSection" ng-controller="dashboardController">
 
     <div id="listView"></div>
 
-
-
-
-
-
-
-    <div id="dashboard" class="row">
-      <div class="column  border border-primary category" ng-repeat="cat in categories">
-        <h2 class="text-center">{{cat.name}}</h2>
-
-        <div kendo-sortable kendo-list-view data-k-options="listOptions(cat.todos)" id="list{{cat.id}}">
+    <div id="dashboard" class="row" ng-if="loaded">
+      <div class="column  border border-primary category" ng-repeat="cat in categories track by cat.id">
+        <h2 class="text-center">{{cat.title}}</h2>
+        <div kendo-sortable kendo-list-view="listWidget{{cat.id}}" data-k-options="listOptions(cat)" id="list{{cat.id}}">
+        </div>
+        <div class="align-bottom m-1" ng-model="newTitle">
+          <input type="text" class="k-textbox border-primary w-75" ng-model="newTitle" name="title" required="required" validationMessage="required" />
+          <span data-for="title" class="k-invalid-msg"></span>
+          <button kendo-button icon="'k-icon k-i-add'" ng-click="addList($index, cat.id, newTitle);newTitle=''" ng-active="newTitle"></button>
         </div>
       </div>
-    </div>
+      
 
+    </div>
+    
   </div>
 </div>
 
 <script type="text/x-kendo-template" id="template">
   <div class="product">
   <div>
-      <h2 class="text-center">{{dataItem.name}}</h2>
+      <h2 class="text-center">{{dataItem.title}}</h2>
       <ul>
-        <li ng-repeat="list in dataItem.list">
+        <li ng-repeat="item in dataItem.items">
           <label class="checkbox">
-            <input type="checkbox" ng-model="list.done">
-            <span class="done-{{list.done}}">{{list.text}}</span>
+            <input type="checkbox" ng-model="item.done">
+            <span class="done-{{item.done}}">{{item.title}}</span>
           </label>
         </li>
      </ul>
+  <div class="align-bottom m-1" ng-model="newTitle">
+          <input type="text" class="k-textbox border-primary w-75" ng-model="newTitle" name="title" required="required" validationMessage="required" />
+          <span data-for="title" class="k-invalid-msg"></span>
+          <button kendo-button icon="'k-icon k-i-add'" ng-click="addItem(dataItem, newTitle);newTitle=''" ng-active="newTitle"></button>
+        </div>
   </div>
   </div>
 </script>
 
-<script type="text/ng-template" id="todo.html">
+@*<script type="text/ng-template" id="todo.html">
 
   <div class="k-widget"  >
    <div>
-      <h2 class="text-center">{{dataItem.name}}</h2>
+      <h2 class="text-center">{{dataItem.title}}</h2>
       <ul>
         <li ng-repeat="list in dataItem.list">
           <label class="checkbox">
@@ -59,4 +64,4 @@
 </div>
 
 
-</script>
+</script>*@

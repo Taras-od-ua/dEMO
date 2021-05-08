@@ -6,14 +6,10 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Core.Models
 {
-    public partial class Category
+    public partial class List
     {
 
         public long Id { get; set; }
-
-
-        [StringLength(50)]
-        public string? Color { get; set; }
 
         [Required] [StringLength(50)]
         public string? Title { get; set; }
@@ -26,7 +22,16 @@ namespace Core.Models
 
 
 
-        [InverseProperty("Category")]
-         public virtual ICollection<List> Lists { get; set; } = new HashSet<List>();
+        public long CategoryId { get; set; }
+
+
+        [ForeignKey("CategoryId")]
+        [InverseProperty("Lists")]
+        public virtual Category Category { get; set; }
+
+
+
+        [InverseProperty("List")]
+        public virtual ICollection<Item> Items { get; set; } = new HashSet<Item>();
     }
 }

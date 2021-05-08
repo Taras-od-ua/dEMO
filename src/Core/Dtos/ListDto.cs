@@ -1,13 +1,14 @@
 using System.Collections.Generic;
-using Core.Models;
 
 namespace Core.Dtos
 {
-    public class CategoryDto
+    public class ListDto
     {
         public long Id { get; set; }
         public string Color { get; set; }
         public string Title { get; set; }
-        public IEnumerable<ListDto> Lists { get; set; }
+        public long CategoryId { get; set; }
+        
+        public IEnumerable<ItemDto> Items { get; set; }
     }
 }

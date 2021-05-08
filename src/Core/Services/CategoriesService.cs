@@ -42,12 +42,7 @@ namespace Services
                     .OrderBy(x => x.Title)
                     .ToListAsync(cancellationToken);
 
-                return categories.Select(x => new CategoryDto
-                {
-                    Id = x.Id,
-                    Color = x.Color,
-                    Title = x.Title,
-                });
+                return categories.Select(x => x.MapToDto());
             }
             catch (Exception e)
             {

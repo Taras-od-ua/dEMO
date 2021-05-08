@@ -9,6 +9,7 @@
   function get(url, params) {
     var defer = $q.defer();
     $rootScope.$broadcast('beginRequest');
+    kendo.ui.progress($("#contentSection"), true);
     $http({
         method: "GET",
       url: url,
@@ -18,17 +19,18 @@
       .then(
         function (res) {
           $rootScope.$broadcast('endRequest');
+          
           defer.resolve(res.data);
         },
         function (err) {
           $rootScope.$broadcast('endRequest');
+          
           defer.reject(err);
         }
       )
       .finally(function () {
-        /* Just by adding a finally clause on $http, the finally
-            handler in the chain i.e. in the controller utilizing
-            the restService, does get called.*/
+        kendo.ui.progress($("#contentSection"), false);
+       
       });
 
     return defer.promise;
@@ -57,16 +59,16 @@
         update: function (options) {
           var model = $.extend({}, options.data.models[0]);
           model.color = '#'+kendo.parseColor(model.color).toHex();
-            $.ajax({
-              url: baseUrl + "categories/" + model.id,
-              type: 'PUT',
-              data: JSON.stringify(model),
-              dataType: 'json',
-              contentType: 'application/json',
-              success: function(result) {
-                options.success(result);
-              }
-            })
+          $.ajax({
+            url: baseUrl + "categories/" + model.id,
+            type: 'PUT',
+            data: JSON.stringify(model),
+            dataType: 'json',
+            contentType: 'application/json',
+            success: function(result) {
+              options.success(result);
+            }
+          });
         },
 
         destroy: function (options) {

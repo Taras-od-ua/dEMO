@@ -1,6 +1,34 @@
 
-angular.module("todoApp", ["kendo.directives"]).controller("dashboardController", function ($scope, $templateCache) {
- 
+angular.module("todoApp", ["kendo.directives"]).controller("dashboardController", function ($scope, $timeout, $templateCache) {
+
+  var baseUrl = "http://localhost:5000/api/";
+  $scope.categories = [];
+  $scope.loaded = false;
+  function init() {
+    kendo.ui.progress($("#contentSection"), true);
+
+    $.ajax({
+      url: baseUrl + "categories",
+      type: 'GET',
+    
+      dataType: 'json',
+      contentType: 'application/json',
+      success: function (result) {
+
+        $scope.categories = result;
+        kendo.ui.progress($("#contentSection"), false);
+       
+        $timeout(function () {
+         $scope.$apply(function () {
+            $scope.loaded = true;
+          });
+        });
+        
+      }
+    });
+  }
+
+  init();
   
   $scope.todos = [
     { text: 'first', done: true },
@@ -8,7 +36,8 @@ angular.module("todoApp", ["kendo.directives"]).controller("dashboardController"
   ];
   $scope.listOptions = listOptions;
 
-  $scope.categories = [
+
+  $scope.categories2 = [
     {
       id:1,
       name: 'default',
@@ -44,10 +73,38 @@ angular.module("todoApp", ["kendo.directives"]).controller("dashboardController"
     }
   ];
 
-  $scope.addTodo = function () {
-    $scope.todos.push({ text: $scope.todoText, done: false });
-    $scope.todoText = '';
+  $scope.addItem = function (list, title) {
+    if (!list.items)
+      list.items = [];
+
+   
+    $timeout(function () {
+      $scope.$apply(function () {
+        list.items.push({ title: title, done: false });
+      });
+    });
+
   };
+
+  $scope.addList = function (index,catId, title) {
+    $scope.categories[index].lists.push({ title: title, categoryId: catId });
+
+
+    $timeout(function () {
+      $scope.$apply(function () {
+
+        var sel = '#list' + catId;
+        var listView = $(sel).data("kendoListView");
+        // refreshes the ListView
+
+        listView.dataSource.data($scope.categories[index].lists);
+        listView.refresh();
+      });
+    });
+    
+  };
+  
+
 
   $scope.remaining = function () {
     var count = 0;
@@ -65,9 +122,12 @@ angular.module("todoApp", ["kendo.directives"]).controller("dashboardController"
         $scope.todos.push(todo);
     });
   };
-/*Options*/
 
-  function listOptions(todos) {
+
+
+  /*Options*/
+
+  function listOptions(cat) {
     var arr = $scope.categories.map(function (a) { return "#list"+a.id; });
     var connect = arr.join(", ");
 
@@ -75,15 +135,22 @@ angular.module("todoApp", ["kendo.directives"]).controller("dashboardController"
         transport: {
           read: function (options) {
 
-            /*DashboardsService.loadDashboardWidgets(dashboardId, areaNo).then(function (data) {
-              $.each(data.data, function (key, dash) {
-                dash.dashboardType = type;
-              });
-              options.success(data);
-            });*/
+           /* $.ajax({
+              url: baseUrl + "categories",
+              type: 'GET',
 
+              dataType: 'json',
+              contentType: 'application/json',
+              success: function (result) {
+                options.success(result.data);
+
+                kendo.ui.progress($("#contentSection"), false);
+
+
+              }
+            });*/
            
-            options.success(todos);
+            options.success(cat.lists);
           },
           /*parameterMap: function (data, operation) {
             return JSON.stringify(data);
